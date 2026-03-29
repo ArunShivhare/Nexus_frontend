@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 function PublicNavbar() {
   const [darkMode, setDarkMode] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     if (darkMode) {
@@ -12,53 +13,75 @@ function PublicNavbar() {
     }
   }, [darkMode]);
 
+  // Helper to highlight active links
+  const isActive = (path) => location.pathname === path;
+
   return (
-    <nav className="
-      sticky top-0 z-50 backdrop-blur-md border-b
-      bg-white/70 border-gray-200
-      dark:bg-gray-900/80 dark:border-gray-800
-    ">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <nav className="fixed top-0 w-full z-[100] transition-all duration-300">
+      {/* Subtle border and blur container */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-4">
+        <div className="flex items-center justify-between h-16 px-6 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl shadow-sm dark:shadow-2xl">
+          
+          {/* Logo Section */}
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="p-1.5 rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 transition-transform group-hover:scale-110">
+              <img src="/favicon.png" className="w-6 h-6 brightness-110" alt="Nexus" />
+            </div>
+            <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white uppercase">
+              Nexus
+            </span>
+          </Link>
 
-        {/* Logo */}
-        <div className="flex items-center gap-2">
-          <div className="p-2 rounded-xl 
-            bg-linear-to-br from-purple-200 to-blue-300
-            dark:from-purple-500 dark:to-blue-500">
-            <img src="/favicon.png" className="w-6 h-6" />
+          {/* Navigation Links */}
+          <div className="hidden md:flex items-center gap-8">
+            {[
+              { name: "Home", path: "/" },
+              { name: "About", path: "/about" },
+              { name: "Dashboard", path: "/dashboard" },
+            ].map((link) => (
+              <Link
+                key={link.name}
+                to={link.path}
+                className={`text-sm font-medium transition-colors hover:text-purple-500 dark:hover:text-purple-400 ${
+                  isActive(link.path) 
+                    ? "text-purple-600 dark:text-purple-400" 
+                    : "text-slate-600 dark:text-slate-400"
+                }`}
+              >
+                {link.name}
+              </Link>
+            ))}
           </div>
-          <span className="font-semibold text-gray-900 dark:text-white">
-            Nexus
-          </span>
+
+          {/* Actions Section */}
+          <div className="flex items-center gap-3">
+            {/* Dark Mode Toggle */}
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className="p-2 rounded-full border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-lg"
+              aria-label="Toggle Theme"
+            >
+              {darkMode ? "✨" : "🌙"}
+            </button>
+
+            <div className="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-1 hidden sm:block"></div>
+
+            <Link
+              to="/login"
+              className="hidden sm:block text-sm font-semibold text-slate-900 dark:text-white px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all"
+            >
+              Log in
+            </Link>
+
+            <Link
+              to="/login"
+              className="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-slate-900 dark:bg-white dark:text-slate-950 hover:opacity-90 transition-all active:scale-95 shadow-md"
+            >
+              Get Started
+            </Link>
+          </div>
+
         </div>
-
-        {/* Links */}
-        <div className="flex items-center gap-6 text-sm text-gray-700 dark:text-gray-300">
-
-          <Link to="/" className="hover:text-purple-600 dark:hover:text-purple-400">
-            Home
-          </Link>
-
-          <Link to="/login" className="hover:text-purple-600 dark:hover:text-purple-400">
-            Login
-          </Link>
-
-          <Link to="/about" className="hover:text-purple-600 dark:hover:text-purple-400">
-            About
-          </Link>
-
-        </div>
-
-        {/* Theme Toggle */}
-        <button
-          onClick={() => setDarkMode(!darkMode)}
-          className="px-3 py-2 rounded-lg text-sm
-            bg-gray-200 text-gray-900
-            dark:bg-gray-800 dark:text-white"
-        >
-          {darkMode ? "🌙" : "☀️"}
-        </button>
-
       </div>
     </nav>
   );

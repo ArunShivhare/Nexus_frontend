@@ -6,6 +6,7 @@ function Navbar({ user }) {
   const [darkMode, setDarkMode] = useState(true);
 
   const username = user?.name || "User";
+  const userRole = user?.role || "Member";
 
   useEffect(() => {
     if (darkMode) {
@@ -21,62 +22,64 @@ function Navbar({ user }) {
   };
 
   return (
-    <header className="
-      sticky top-0 z-50 backdrop-blur-md border-b
-      bg-white/70 border-gray-200
-      dark:bg-gray-900/80 dark:border-gray-800
-    ">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md">
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6">
+        <div className="flex h-20 items-center justify-between">
+          
+          {/* Left: Branding & Identity */}
+          <div className="flex items-center gap-5">
+            <div className="relative group cursor-pointer" onClick={() => navigate("/")}>
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-500 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-300"></div>
+              <div className="relative p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-sm">
+                <img src="/favicon.png" className="w-7 h-7" alt="Nexus" />
+              </div>
+            </div>
 
-        {/* Left */}
-        <div className="flex items-center gap-4">
+            <div className="hidden sm:block h-8 w-px bg-slate-200 dark:bg-slate-800 mx-1"></div>
 
-          {/* Logo */}
-          <div className="p-2 rounded-xl 
-            bg-linear-to-br from-purple-200 to-blue-300
-            dark:from-purple-500 dark:to-blue-500 shadow-md">
-            <img src="/favicon.png" className="w-8 h-8" />
+            <div className="flex flex-col">
+              <h1 className="text-sm font-bold text-slate-900 dark:text-white leading-tight">
+                Hey, <span className="text-purple-600 dark:text-purple-400">{username}</span> 👋
+              </h1>
+              <div className="flex items-center gap-1.5">
+                <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  {userRole} Account
+                </p>
+              </div>
+            </div>
           </div>
 
-          {/* Greeting */}
-          <div>
-            <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
-              Hello,{" "}
-              <span className="bg-linear-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
-                {username}
-              </span>
-            </h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Welcome back to <span className="font-medium">Nexus</span>
-            </p>
+          {/* Right: Actions & Profile */}
+          <div className="flex items-center gap-3">
+            
+            {/* Theme Toggle */}
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:border-purple-300 dark:hover:border-purple-900 transition-all"
+              title="Toggle Theme"
+            >
+              {darkMode ? "🌙" : "☀️"}
+            </button>
+
+            {/* Quick Actions / Notifications (Optional Placeholder) */}
+            <button className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+              <span className="text-lg">🔔</span>
+            </button>
+
+            <div className="h-8 w-px bg-slate-200 dark:bg-slate-800 mx-2"></div>
+
+            {/* Logout Button */}
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
+            >
+              <span>Logout</span>
+              <span className="text-xs opacity-60">ESC</span>
+            </button>
           </div>
 
         </div>
-
-        {/* Right */}
-        <div className="flex items-center gap-4">
-
-          {/* Theme Toggle */}
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className="px-3 py-2 rounded-lg text-sm
-              bg-gray-200 text-gray-900
-              dark:bg-gray-800 dark:text-white"
-          >
-            {darkMode ? "🌙" : "☀️"}
-          </button>
-
-          {/* Logout */}
-          <button
-            onClick={handleLogout}
-            className="px-5 py-2 rounded-xl text-sm font-medium text-white 
-              bg-linear-to-r from-purple-600 to-blue-500 hover:opacity-90"
-          >
-            Logout
-          </button>
-
-        </div>
-
       </div>
     </header>
   );

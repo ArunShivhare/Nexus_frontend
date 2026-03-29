@@ -8,18 +8,22 @@ function MemberDashboard({ user }) {
 
   const fetchTasks = async () => {
     const res = await axios.get(
-      `https://nexus-backend-dioy.onrender.com/api/tasks/member/${user.email}`
+      `https://nexus-backend-dioy.onrender.com/api/tasks/member/${user.email}`,
     );
     setTasks(res.data);
   };
 
   const markComplete = async (id) => {
-    await axios.patch(`https://nexus-backend-dioy.onrender.com/api/tasks/complete/${id}`);
+    await axios.patch(
+      `https://nexus-backend-dioy.onrender.com/api/tasks/complete/${id}`,
+    );
     fetchTasks();
   };
 
   const markFailed = async (id) => {
-    await axios.patch(`https://nexus-backend-dioy.onrender.com/api/tasks/failed/${id}`);
+    await axios.patch(
+      `https://nexus-backend-dioy.onrender.com/api/tasks/failed/${id}`,
+    );
     fetchTasks();
   };
 
@@ -29,118 +33,190 @@ function MemberDashboard({ user }) {
 
   // ---------------- STATS ----------------
   const total = tasks.length;
-  const completed = tasks.filter(t => t.status === "completed").length;
-  const pending = tasks.filter(t => t.status === "pending").length;
-  const failed = tasks.filter(t => t.status === "failed").length;
+  const completed = tasks.filter((t) => t.status === "completed").length;
+  const pending = tasks.filter((t) => t.status === "pending").length;
+  const failed = tasks.filter((t) => t.status === "failed").length;
+  const [selectedTask, setSelectedTask] = useState(null);
 
   return (
     <>
       <Navbar user={user} />
 
-      <div className="
-        min-h-screen px-6 py-10 space-y-10
-
-        bg-linear-to-br from-purple-50 via-white to-blue-50
-        dark:from-black dark:via-gray-900 dark:to-black
-      ">
-
-        {/* Title */}
-        <div className="text-center">
-          <h1 className="text-3xl font-bold bg-linear-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
-            Member Dashboard 👤
-          </h1>
-          <p className="text-gray-500 dark:text-gray-400">
-            Track your assigned work
-          </p>
-        </div>
-
-        {/* STATS */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-
-          <div className="bg-white dark:bg-gray-900 p-4 rounded-xl border text-center">
-            <p className="text-sm text-gray-500">Total</p>
-            <p className="text-xl font-bold">{total}</p>
+      <div className="min-h-svh w-full bg-slate-50 dark:bg-slate-950 transition-colors">
+        <div className="max-w-5xl mx-auto p-4 sm:p-8 space-y-8 sm:space-y-12">
+          {/* Header Section */}
+          <div className="text-center space-y-2">
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+              Member Dashboard <span className="text-2xl">👤</span>
+            </h1>
+            <p className="text-slate-500 dark:text-slate-400 font-medium text-sm sm:text-base">
+              Your personal mission control. Track and execute tasks.
+            </p>
           </div>
 
-          <div className="bg-white dark:bg-gray-900 p-4 rounded-xl border text-center">
-            <p className="text-sm text-gray-500">Completed</p>
-            <p className="text-xl font-bold text-green-500">{completed}</p>
+          {/* STATS GRID */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {[
+              {
+                label: "Total",
+                value: total,
+                bg: "bg-slate-100 dark:bg-slate-800",
+                color: "text-slate-900 dark:text-white",
+              },
+              {
+                label: "Completed",
+                value: completed,
+                bg: "bg-emerald-100 dark:bg-emerald-900/30",
+                color: "text-emerald-700 dark:text-emerald-400",
+              },
+              {
+                label: "Pending",
+                value: pending,
+                bg: "bg-amber-100 dark:bg-amber-900/30",
+                color: "text-amber-700 dark:text-amber-400",
+              },
+              {
+                label: "Failed",
+                value: failed,
+                bg: "bg-red-100 dark:bg-red-900/30",
+                color: "text-red-700 dark:text-red-400",
+              },
+            ].map((stat, i) => (
+              <div
+                key={i}
+                className={`${stat.bg} p-5 sm:p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col items-center justify-center transition-transform hover:scale-[1.02]`}
+              >
+                <p className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">
+                  {stat.label}
+                </p>
+                <p className={`text-2xl sm:text-3xl font-black ${stat.color}`}>
+                  {stat.value}
+                </p>
+              </div>
+            ))}
           </div>
 
-          <div className="bg-white dark:bg-gray-900 p-4 rounded-xl border text-center">
-            <p className="text-sm text-gray-500">Pending</p>
-            <p className="text-xl font-bold text-yellow-500">{pending}</p>
-          </div>
-
-          <div className="bg-white dark:bg-gray-900 p-4 rounded-xl border text-center">
-            <p className="text-sm text-gray-500">Failed</p>
-            <p className="text-xl font-bold text-red-500">{failed}</p>
-          </div>
-
-        </div>
-
-        {/* TASK LIST */}
-        <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border">
-
-          <h2 className="font-semibold mb-4">Your Tasks</h2>
-
-          {tasks.length === 0 ? (
-            <p className="text-gray-400">No tasks assigned</p>
-          ) : (
-            <div className="space-y-4">
-              {tasks.map((task) => (
-                <div
-                  key={task._id}
-                  className="p-4 rounded-xl bg-gray-100 dark:bg-gray-800"
-                >
-                  <h3 className="font-semibold text-lg">{task.title}</h3>
-
-                  <p className="text-gray-500 dark:text-gray-400 text-sm">
-                    {task.description}
-                  </p>
-
-                  <p className="text-xs mt-2">
-                    Assigned by: {task.assignedBy?.name}
-                  </p>
-
-                  {/* Status */}
-                  <p className={`mt-2 text-sm font-medium
-                    ${task.status === "completed" && "text-green-500"}
-                    ${task.status === "pending" && "text-yellow-500"}
-                    ${task.status === "failed" && "text-red-500"}
-                  `}>
-                    Status: {task.status}
-                  </p>
-
-                  {/* Actions */}
-                  {task.status === "pending" && (
-                    <div className="flex gap-3 mt-3">
-
-                      <button
-                        onClick={() => markComplete(task._id)}
-                        className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-                      >
-                        Complete
-                      </button>
-
-                      <button
-                        onClick={() => markFailed(task._id)}
-                        className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-                      >
-                        Fail
-                      </button>
-
-                    </div>
-                  )}
-                </div>
-              ))}
+          {/* TASK LIST SECTION */}
+          <div className="space-y-6">
+            <div className="flex items-center justify-between px-2">
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                Your Missions
+              </h2>
+              <span className="px-3 py-1 bg-slate-200 dark:bg-slate-800 rounded-full text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-tighter">
+                {tasks.length} Assigned
+              </span>
             </div>
-          )}
 
+            {tasks.length === 0 ? (
+              <div className="bg-white dark:bg-slate-900 rounded-[2rem] border border-dashed border-slate-300 dark:border-slate-800 p-12 text-center">
+                <p className="text-slate-400 font-medium">
+                  No tasks assigned yet. Enjoy the breather! ✨
+                </p>
+              </div>
+            ) : (
+              <div className="grid gap-4 sm:gap-6">
+                {tasks.map((task) => (
+                  <div
+                    key={task._id}
+                    className="group relative bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:shadow-purple-500/5 transition-all"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-3">
+                          <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                            {task.title}
+                          </h3>
+                          <span
+                            className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${
+                              task.status === "completed"
+                                ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+                                : task.status === "pending"
+                                  ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+                                  : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                            }`}
+                          >
+                            {task.status}
+                          </span>
+                        </div>
+
+                        <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 leading-relaxed max-w-2xl">
+                          {task.description.length > 100
+                            ? task.description.slice(0, 100) + "..."
+                            : task.description}
+                        </p>
+
+                        {task.description.length > 100 && (
+                          <button
+                            onClick={() => setSelectedTask(task)}
+                            className="text-xs text-purple-600 dark:text-purple-400 font-semibold hover:underline mt-1"
+                          >
+                            Read more
+                          </button>
+                        )}
+
+                        <div className="pt-2 flex items-center gap-2 text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                          <div className="w-5 h-5 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-[8px]">
+                            {task.assignedBy?.name?.charAt(0)}
+                          </div>
+                          Assigned by {task.assignedBy?.name}
+                        </div>
+                      </div>
+
+                      {/* Actions Box */}
+                      {task.status === "pending" && (
+                        <div className="flex sm:flex-col gap-5 shrink-0">
+                          <button
+                            onClick={() => markComplete(task._id)}
+                            className="flex-1 sm:flex-none px-6 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold rounded-xl hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-slate-900/10"
+                          >
+                            Complete
+                          </button>
+                          <button
+                            onClick={() => markFailed(task._id)}
+                            className="flex-1 sm:flex-none px-6 py-2.5 bg-transparent border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 text-xs font-bold rounded-xl hover:bg-red-50 dark:hover:bg-red-950/20 active:scale-95 transition-all"
+                          >
+                            Mark Failed
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-
       </div>
       <Footer />
+      {selectedTask && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+          <div
+            className="
+      w-full max-w-lg p-6 rounded-2xl shadow-xl
+
+      bg-white dark:bg-slate-900
+      border border-slate-200 dark:border-slate-800
+    "
+          >
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-3">
+              {selectedTask.title}
+            </h2>
+
+            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
+              {selectedTask.description}
+            </p>
+
+            <div className="flex justify-end">
+              <button
+                onClick={() => setSelectedTask(null)}
+                className="px-4 py-2 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-semibold"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

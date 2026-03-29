@@ -23,10 +23,13 @@ const LeaderDashboard = () => {
   };
 
   const addMember = async () => {
-    await axios.post("https://nexus-backend-dioy.onrender.com/api/users/add-member", {
-      leaderEmail: user.email,
-      memberEmail: email,
-    });
+    await axios.post(
+      "https://nexus-backend-dioy.onrender.com/api/users/add-member",
+      {
+        leaderEmail: user.email,
+        memberEmail: email,
+      },
+    );
     setEmail("");
     fetchMembers();
   };
@@ -40,12 +43,15 @@ const LeaderDashboard = () => {
   };
 
   const assignTask = async () => {
-    await axios.post("https://nexus-backend-dioy.onrender.com/api/tasks/assign", {
-      title,
-      description,
-      memberEmail: selectedMember,
-      leaderEmail: user.email,
-    });
+    await axios.post(
+      "https://nexus-backend-dioy.onrender.com/api/tasks/assign",
+      {
+        title,
+        description,
+        memberEmail: selectedMember,
+        leaderEmail: user.email,
+      },
+    );
 
     setTitle("");
     setDescription("");
@@ -76,151 +82,205 @@ const LeaderDashboard = () => {
     <>
       <Navbar user={user} />
 
-      <div
-        className="
-        min-h-screen px-6 py-10 space-y-10
-
-        bg-linear-to-br from-purple-50 via-white to-blue-50
-        dark:from-black dark:via-gray-900 dark:to-black
-      "
-      >
-        {/* Title */}
-        <div className="text-center">
-          <h1 className="text-3xl font-bold bg-linear-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
-            Leader Dashboard 👑
-          </h1>
-          <p className="text-gray-500 dark:text-gray-400">
-            Manage your team & tasks
-          </p>
-        </div>
-
-        {/* GRID */}
-        <div className="grid md:grid-cols-3 gap-6">
-          {/* LEFT */}
-          <div className="md:col-span-2 space-y-6">
-            {/* Assign Task */}
-            <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border">
-              <h2 className="font-semibold mb-4">Assign Task</h2>
-
-              <input
-                placeholder="Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-full p-2 mb-3 rounded bg-gray-100 dark:bg-gray-800"
-              />
-
-              <textarea
-                placeholder="Description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="w-full p-2 mb-3 rounded bg-gray-100 dark:bg-gray-800"
-              />
-
-              <select
-                value={selectedMember}
-                onChange={(e) => setSelectedMember(e.target.value)}
-                className="w-full p-2 mb-3 rounded bg-gray-100 dark:bg-gray-800"
-              >
-                <option value="">Select Member</option>
-                {members.map((m) => (
-                  <option key={m._id} value={m.email}>
-                    {m.name}
-                  </option>
-                ))}
-              </select>
-
-              <button
-                onClick={assignTask}
-                className="w-full bg-linear-to-r from-purple-600 to-blue-500 text-white py-2 rounded"
-              >
-                Assign Task
-              </button>
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-4 sm:p-8 transition-colors overflow-x-hidden">
+        <div className="max-w-7xl mx-auto space-y-8">
+          {/* Header Section */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-3">
+                Leader Dashboard <span className="text-2xl">👑</span>
+              </h1>
+              <p className="text-slate-500 dark:text-slate-400 font-medium">
+                Monitor performance and orchestrate team tasks.
+              </p>
             </div>
 
-            {/* TASK TABLE */}
-            <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border">
-              <h2 className="font-semibold mb-4">Tasks Overview</h2>
-
-              <div className="overflow-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="text-left border-b">
-                      <th>Task</th>
-                      <th>Assigned To</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {tasks.map((task) => (
-                      <tr key={task._id} className="border-b">
-                        <td>{task.title}</td>
-                        <td>{task.assignedTo?.name}</td>
-                        <td
-                          className={
-                            task.status === "completed"
-                              ? "text-green-500"
-                              : "text-yellow-500"
-                          }
-                        >
-                          {task.status}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+            <div className="flex items-center gap-2 px-4 py-2 bg-purple-50 dark:bg-purple-900/20 border border-purple-100 dark:border-purple-800 rounded-2xl">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+              </span>
+              <span className="text-xs font-bold text-purple-700 dark:text-purple-400 uppercase tracking-wider">
+                Live Updates
+              </span>
             </div>
           </div>
 
-          {/* RIGHT */}
-          <div className="space-y-6">
-            {/* Add Member */}
-            <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border">
-              <h2 className="mb-3">Add Member</h2>
+          {/* Main Grid */}
+          <div className="grid lg:grid-cols-12 gap-4 sm:gap-6 md:gap-8">
+            {/* Left Column: Task Creation & Table (8 Units) */}
+            <div className="lg:col-span-8 space-y-8">
+              {/* Assign Task Card */}
+              <div className="bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-slate-800 p-4 sm:p-6 md:p-8 shadow-sm">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
+                  Assign New Mission
+                </h2>
 
-              <input
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-                className="w-full p-2 mb-3 rounded bg-gray-100 dark:bg-gray-800"
-              />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="sm:col-span-2">
+                    <input
+                      placeholder="Task Title"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-purple-500 outline-none transition-all text-slate-900 dark:text-white"
+                    />
+                  </div>
 
-              <button
-                onClick={addMember}
-                className="w-full bg-blue-600 text-white py-2 rounded"
-              >
-                Add
-              </button>
+                  <div className="sm:col-span-2">
+                    <textarea
+                      placeholder="Provide a clear description..."
+                      rows="3"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-purple-500 outline-none transition-all text-slate-900 dark:text-white"
+                    />
+                  </div>
+
+                  <select
+                    value={selectedMember}
+                    onChange={(e) => setSelectedMember(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-purple-500 outline-none transition-all text-slate-900 dark:text-white appearance-none cursor-pointer"
+                  >
+                    <option value="">Assign to Member</option>
+                    {members.map((m) => (
+                      <option key={m._id} value={m.email}>
+                        {m.name}
+                      </option>
+                    ))}
+                  </select>
+
+                  <button
+                    onClick={assignTask}
+                    className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-bold py-3 rounded-xl hover:opacity-90 transition-all active:scale-95"
+                  >
+                    Deploy Task
+                  </button>
+                </div>
+              </div>
+
+              {/* Task Overview Table */}
+              <div className="bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+                <div className="p-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                  <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                    Active Operations
+                  </h2>
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                    {tasks.length} Total
+                  </span>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left">
+                    <thead className="bg-slate-50 dark:bg-slate-950/50">
+                      <tr className="text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100 dark:border-slate-800">
+                        <th className="px-4 sm:px-6 md:px-8 py-3 sm:py-4">Task Name</th>
+                        <th className="px-4 sm:px-6 md:px-8 py-3 sm:py-4">Assignee</th>
+                        <th className="px-4 sm:px-6 md:px-8 py-3 sm:py-4">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                      {tasks.map((task) => (
+                        <tr
+                          key={task._id}
+                          className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors"
+                        >
+                          <td className="px-8 py-5 font-semibold text-slate-700 dark:text-slate-200">
+                            {task.title}
+                          </td>
+                          <td className="px-4 sm:px-6 md:px-8 py-4 sm:py-5">
+                            <div className="flex items-center gap-2">
+                              <div className="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/40 flex items-center justify-center text-[10px] text-purple-600 font-bold">
+                                {task.assignedTo?.name?.charAt(0)}
+                              </div>
+                              <span className="text-slate-600 dark:text-slate-400 text-sm">
+                                {task.assignedTo?.name}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="px-4 sm:px-6 md:px-8 py-4 sm:py-5">
+                            <span
+                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold capitalize ${
+                                task.status === "completed"
+                                  ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+                                  : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+                              }`}
+                            >
+                              {task.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
 
-            {/* MEMBER STATS */}
-            <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border">
-              <h2 className="mb-4">Team Overview</h2>
+            {/* Right Column: Add Member & Stats (4 Units) */}
+            <div className="lg:col-span-4 space-y-8">
+              {/* Add Member Card */}
+              <div className="bg-gradient-to-br from-purple-600 to-blue-600 rounded-[2rem] p-8 text-white shadow-xl shadow-purple-500/20">
+                <h2 className="text-lg font-bold mb-2">Grow the Squad</h2>
+                <p className="text-purple-100 text-xs mb-6 font-medium">
+                  Invite a new member via email.
+                </p>
 
-              {members.map((m) => {
-                const stats = getStats(m._id);
-                return (
-                  <div
-                    key={m._id}
-                    className="mb-3 p-3 bg-gray-100 dark:bg-gray-800 rounded"
+                <div className="space-y-3">
+                  <input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="team@example.com"
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 placeholder:text-white/50 outline-none focus:bg-white/20 transition-all text-sm"
+                  />
+                  <button
+                    onClick={addMember}
+                    className="w-full bg-white text-purple-600 font-bold py-3 rounded-xl hover:bg-slate-50 transition-all active:scale-95 shadow-lg"
                   >
-                    <p className="font-medium">{m.name}</p>
+                    Send Invite
+                  </button>
+                </div>
+              </div>
 
-                    <div className="text-xs text-gray-500 flex flex-wrap gap-2 mt-1">
-                      <span>Total: {stats.total}</span>
-                      <span className="text-green-500">
-                        Completed: {stats.completed}
-                      </span>
-                      <span className="text-yellow-500">
-                        Pending: {stats.pending}
-                      </span>
-                      <span className="text-red-500">
-                        Failed: {stats.failed}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
+              {/* Team Performance Stats */}
+              <div className="bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
+                  Leaderboard
+                </h2>
+
+                <div className="space-y-4">
+                  {members.map((m) => {
+                    const stats = getStats(m._id);
+                    return (
+                      <div
+                        key={m._id}
+                        className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800"
+                      >
+                        <div className="flex justify-between items-center mb-3">
+                          <span className="font-bold text-slate-700 dark:text-slate-200">
+                            {m.name}
+                          </span>
+                          {/* <span className="text-[10px] bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded-md font-black">LVL 1</span> */}
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] font-bold uppercase tracking-tighter">
+                          <div className="bg-blue-50 dark:bg-blue-900/20 p-2 rounded-lg text-blue-600 dark:text-blue-400 border border-blue-100/50 dark:border-blue-800/30">
+                            <span className="p-1">Total:</span> {stats.total}
+                          </div>
+                          <div className="bg-emerald-50 dark:bg-emerald-900/20 p-2 rounded-lg text-emerald-600 dark:text-emerald-400 border border-emerald-100/50 dark:border-emerald-800/30">
+                            <span className="p-1">Done:</span> {stats.completed}
+                          </div>
+                          <div className="bg-amber-50 dark:bg-amber-900/20 p-2 rounded-lg text-amber-600 dark:text-amber-400 border border-amber-100/50 dark:border-amber-800/30">
+                            <span className="p-1">Wait:</span> {stats.pending}
+                          </div>
+                          <div className="bg-red-50 dark:bg-red-900/20 p-2 rounded-lg text-red-600 dark:text-red-400 border border-red-100/50 dark:border-red-800/30">
+                            <span className="p-1">Fail:</span> {stats.failed}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </div>
         </div>
