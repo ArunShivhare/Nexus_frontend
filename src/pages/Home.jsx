@@ -11,7 +11,7 @@ function Home() {
       <div className="
         min-h-[90vh] flex flex-col items-center justify-center text-center px-6
 
-        bg-gradient-to-br from-purple-50 via-white to-blue-50
+        bg-linear-to-br from-purple-50 via-white to-blue-50
         dark:from-black dark:via-gray-900 dark:to-black
       ">
 
@@ -21,7 +21,7 @@ function Home() {
           text-gray-900 dark:text-white
         ">
           Manage Your Team <br />
-          <span className="bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
+          <span className="bg-linear-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
             Smarter & Faster 🚀
           </span>
         </h1>
@@ -54,7 +54,7 @@ function Home() {
             onClick={() => navigate("/login")}
             className="
               px-6 py-3 rounded-xl font-medium text-white transition
-              bg-gradient-to-r from-purple-600 to-blue-500 hover:opacity-90
+              bg-linear-to-r from-purple-600 to-blue-500 hover:opacity-90
             "
           >
             Get Started

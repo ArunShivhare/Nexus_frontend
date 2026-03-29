@@ -33,7 +33,7 @@ function Login() {
 
       <div className="
         min-h-[90vh] flex items-center justify-center px-4
-        bg-gradient-to-br from-purple-50 via-white to-blue-50
+        bg-linear-to-br from-purple-50 via-white to-blue-50
         dark:from-black dark:via-gray-900 dark:to-black
       ">
 
@@ -45,7 +45,7 @@ function Login() {
 
           {/* Logo */}
           <div className="text-center mb-8">
-            <div className="mx-auto w-14 h-14 flex items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 mb-4">
+            <div className="mx-auto w-14 h-14 flex items-center justify-center rounded-xl bg-linear-to-br from-purple-500 to-blue-500 mb-4">
               <img src="/favicon.png" className="w-8 h-8" />
             </div>
 
@@ -64,7 +64,7 @@ function Login() {
             <button
               onClick={() => handleLogin("leader")}
               className="w-full flex items-center justify-between px-5 py-3 rounded-xl 
-              bg-gradient-to-r from-purple-600 to-blue-500 text-white font-medium hover:opacity-90"
+              bg-linear-to-r from-purple-600 to-blue-500 text-white font-medium hover:opacity-90"
             >
               <span>Login as Leader 👑</span>
               <span>→</span>

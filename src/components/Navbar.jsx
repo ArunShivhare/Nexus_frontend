@@ -33,7 +33,7 @@ function Navbar({ user }) {
 
           {/* Logo */}
           <div className="p-2 rounded-xl 
-            bg-gradient-to-br from-purple-200 to-blue-300
+            bg-linear-to-br from-purple-200 to-blue-300
             dark:from-purple-500 dark:to-blue-500 shadow-md">
             <img src="/favicon.png" className="w-8 h-8" />
           </div>
@@ -42,7 +42,7 @@ function Navbar({ user }) {
           <div>
             <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
               Hello,{" "}
-              <span className="bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
                 {username}
               </span>
             </h1>
@@ -70,7 +70,7 @@ function Navbar({ user }) {
           <button
             onClick={handleLogout}
             className="px-5 py-2 rounded-xl text-sm font-medium text-white 
-              bg-gradient-to-r from-purple-600 to-blue-500 hover:opacity-90"
+              bg-linear-to-r from-purple-600 to-blue-500 hover:opacity-90"
           >
             Logout
           </button>

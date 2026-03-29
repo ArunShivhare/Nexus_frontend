@@ -40,13 +40,13 @@ function MemberDashboard({ user }) {
       <div className="
         min-h-screen px-6 py-10 space-y-10
 
-        bg-gradient-to-br from-purple-50 via-white to-blue-50
+        bg-linear-to-br from-purple-50 via-white to-blue-50
         dark:from-black dark:via-gray-900 dark:to-black
       ">
 
         {/* Title */}
         <div className="text-center">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold bg-linear-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
             Member Dashboard 👤
           </h1>
           <p className="text-gray-500 dark:text-gray-400">

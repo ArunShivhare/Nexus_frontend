@@ -9,7 +9,7 @@ function About() {
       <div className="
         min-h-screen px-6 py-16 space-y-16
 
-        bg-gradient-to-br from-purple-50 via-white to-blue-50
+        bg-linear-to-br from-purple-50 via-white to-blue-50
         dark:from-black dark:via-gray-900 dark:to-black
       ">
 
@@ -20,7 +20,7 @@ function About() {
             text-gray-900 dark:text-white
           ">
             About{" "}
-            <span className="bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
               Nexus
             </span>
           </h1>
@@ -100,7 +100,7 @@ function About() {
             href="/login"
             className="
               inline-block px-6 py-3 rounded-xl text-white font-medium
-              bg-gradient-to-r from-purple-600 to-blue-500 hover:opacity-90
+              bg-linear-to-r from-purple-600 to-blue-500 hover:opacity-90
             "
           >
             Start Now 🚀

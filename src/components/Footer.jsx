@@ -19,7 +19,7 @@ const Footer = () => {
               <div className="
                 w-11 h-11 rounded-xl flex items-center justify-center shadow-md
 
-                bg-gradient-to-br from-purple-200 to-blue-300
+                bg-linear-to-br from-purple-200 to-blue-300
                 dark:from-purple-500 dark:to-blue-500
               ">
                 <img src="/favicon.png" className="w-8 h-8" />
@@ -29,7 +29,7 @@ const Footer = () => {
               <div>
                 <h2 className="
                   font-semibold text-lg 
-                  bg-gradient-to-r from-purple-600 to-blue-500 
+                  bg-linear-to-r from-purple-600 to-blue-500 
                   bg-clip-text text-transparent
                 ">
                   Nexus

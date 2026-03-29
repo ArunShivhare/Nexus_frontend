@@ -23,7 +23,7 @@ function PublicNavbar() {
         {/* Logo */}
         <div className="flex items-center gap-2">
           <div className="p-2 rounded-xl 
-            bg-gradient-to-br from-purple-200 to-blue-300
+            bg-linear-to-br from-purple-200 to-blue-300
             dark:from-purple-500 dark:to-blue-500">
             <img src="/favicon.png" className="w-6 h-6" />
           </div>
