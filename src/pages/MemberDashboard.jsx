@@ -8,18 +8,18 @@ function MemberDashboard({ user }) {
 
   const fetchTasks = async () => {
     const res = await axios.get(
-      `http://localhost:5000/api/tasks/member/${user.email}`
+      `https://nexus-backend-dioy.onrender.com/api/tasks/member/${user.email}`
     );
     setTasks(res.data);
   };
 
   const markComplete = async (id) => {
-    await axios.patch(`http://localhost:5000/api/tasks/complete/${id}`);
+    await axios.patch(`https://nexus-backend-dioy.onrender.com/api/tasks/complete/${id}`);
     fetchTasks();
   };
 
   const markFailed = async (id) => {
-    await axios.patch(`http://localhost:5000/api/tasks/failed/${id}`);
+    await axios.patch(`https://nexus-backend-dioy.onrender.com/api/tasks/failed/${id}`);
     fetchTasks();
   };
 

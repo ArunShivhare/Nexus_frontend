@@ -17,13 +17,13 @@ const LeaderDashboard = () => {
   // ---------------- MEMBER ----------------
   const fetchMembers = async () => {
     const res = await axios.get(
-      `http://localhost:5000/api/users/team/${user.email}`,
+      `https://nexus-backend-dioy.onrender.com/api/users/team/${user.email}`,
     );
     setMembers(res.data);
   };
 
   const addMember = async () => {
-    await axios.post("http://localhost:5000/api/users/add-member", {
+    await axios.post("https://nexus-backend-dioy.onrender.com/api/users/add-member", {
       leaderEmail: user.email,
       memberEmail: email,
     });
@@ -34,13 +34,13 @@ const LeaderDashboard = () => {
   // ---------------- TASK ----------------
   const fetchTasks = async () => {
     const res = await axios.get(
-      `http://localhost:5000/api/tasks/leader/${user.email}`,
+      `https://nexus-backend-dioy.onrender.com/api/tasks/leader/${user.email}`,
     );
     setTasks(res.data);
   };
 
   const assignTask = async () => {
-    await axios.post("http://localhost:5000/api/tasks/assign", {
+    await axios.post("https://nexus-backend-dioy.onrender.com/api/tasks/assign", {
       title,
       description,
       memberEmail: selectedMember,

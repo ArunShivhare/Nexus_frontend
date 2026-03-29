@@ -12,7 +12,7 @@ function Login() {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      const res = await axios.post("http://localhost:5000/api/users/save", {
+      const res = await axios.post("https://nexus-backend-dioy.onrender.com/api/users/save", {
         name: user.displayName,
         email: user.email,
         role: role,
