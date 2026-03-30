@@ -189,23 +189,53 @@ function MemberDashboard({ user }) {
       </div>
       <Footer />
       {selectedTask && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+        <div
+          onClick={() => setSelectedTask(null)} // click outside
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
+        >
           <div
+            onClick={(e) => e.stopPropagation()} // prevent close when clicking inside
             className="
-      w-full max-w-lg p-6 rounded-2xl shadow-xl
+        w-full max-w-lg max-h-[80vh] overflow-hidden
+        p-6 rounded-2xl shadow-xl
 
-      bg-white dark:bg-slate-900
-      border border-slate-200 dark:border-slate-800
-    "
+        bg-white dark:bg-slate-900
+        border border-slate-200 dark:border-slate-800
+        flex flex-col
+      "
           >
+            {/* Title */}
             <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-3">
               {selectedTask.title}
             </h2>
 
-            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
-              {selectedTask.description}
-            </p>
+            {/* SCROLLABLE CONTENT */}
+            <div className="overflow-y-auto pr-2 mb-6 space-y-2">
+              {selectedTask.description.split("\n").map((line, i) => (
+                <p
+                  key={i}
+                  className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed break-words"
+                >
+                  {line.split(" ").map((word, j) =>
+                    word.startsWith("http") ? (
+                      <a
+                        key={j}
+                        href={word}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-purple-600 dark:text-purple-400 underline mr-1"
+                      >
+                        {word}
+                      </a>
+                    ) : (
+                      word + " "
+                    ),
+                  )}
+                </p>
+              ))}
+            </div>
 
+            {/* Footer */}
             <div className="flex justify-end">
               <button
                 onClick={() => setSelectedTask(null)}
