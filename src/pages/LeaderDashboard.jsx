@@ -13,6 +13,7 @@ const LeaderDashboard = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [selectedMember, setSelectedMember] = useState("");
+  const [showAllTasks, setShowAllTasks] = useState(false);
 
   // ---------------- MEMBER ----------------
   const fetchMembers = async () => {
@@ -173,13 +174,23 @@ const LeaderDashboard = () => {
                   <table className="w-full text-left">
                     <thead className="bg-slate-50 dark:bg-slate-950/50">
                       <tr className="text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100 dark:border-slate-800">
-                        <th className="px-4 sm:px-6 md:px-8 py-3 sm:py-4">Task Name</th>
-                        <th className="px-4 sm:px-6 md:px-8 py-3 sm:py-4">Assignee</th>
-                        <th className="px-4 sm:px-6 md:px-8 py-3 sm:py-4">Status</th>
+                        <th className="px-4 sm:px-6 md:px-8 py-3 sm:py-4">
+                          Task Name
+                        </th>
+                        <th className="px-4 sm:px-6 md:px-8 py-3 sm:py-4">
+                          Assignee
+                        </th>
+                        <th className="px-4 sm:px-6 md:px-8 py-3 sm:py-4">
+                          Status
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                      {tasks.map((task) => (
+                      {/* Logic: If showAllTasks is true, show all. If false, show only first 5 */}
+                      {(showAllTasks
+                        ? [...tasks].reverse()
+                        : [...tasks].reverse().slice(0, 5)
+                      ).map((task) => (
                         <tr
                           key={task._id}
                           className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors"
@@ -213,6 +224,20 @@ const LeaderDashboard = () => {
                     </tbody>
                   </table>
                 </div>
+
+                {/* Only show button if there are more than 5 tasks */}
+                {tasks.length > 5 && (
+                  <div className="p-4 border-t border-slate-100 dark:border-slate-800 flex justify-center bg-slate-50/30 dark:bg-slate-950/20">
+                    <button
+                      onClick={() => setShowAllTasks(!showAllTasks)}
+                      className="text-sm font-bold text-purple-600 dark:text-purple-400 hover:underline transition-all"
+                    >
+                      {showAllTasks
+                        ? "Show Less"
+                        : `View All Operations (${tasks.length})`}
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 

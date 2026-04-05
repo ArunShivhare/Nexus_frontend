@@ -2,11 +2,17 @@ import { useNavigate } from "react-router-dom";
 import PublicNavbar from "../components/PublicNavbar";
 import Footer from "../components/Footer";
 import { useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
 
 function Home() {
   const navigate = useNavigate();
   const images = ["/member_dashboard.png", "/leader_dashboard.png"];
   const [currentImage, setCurrentImage] = useState(0);
+
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -17,8 +23,8 @@ function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 selection:bg-purple-100 py-15">
-      <PublicNavbar />
+    <div className="min-h-screen bg-white dark:bg-slate-950 selection:bg-purple-100">
+      {user ? <Navbar user={user} /> : <PublicNavbar />}
 
       <main className="relative overflow-hidden pt-16 pb-24">
         {/* Background Decorative Blobs */}
@@ -27,7 +33,7 @@ function Home() {
           <div className="absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] rounded-full bg-blue-200/30 blur-[120px] dark:bg-blue-900/20" />
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 flex flex-col items-center text-center">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col items-center text-center py-16">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-8 animate-fade-in">
             <span className="relative flex h-2 w-2">
@@ -70,21 +76,30 @@ function Home() {
           </div>
 
           {/* Mockup/Visual Element */}
-          <div className="relative w-full max-w-5xl group">
-            <div className="absolute -inset-1 bg-linear-to-r from-purple-500 to-blue-500 rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
-            <div className="relative rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 backdrop-blur-xl p-2 shadow-2xl">
-              {/* This represents where a screenshot or dashboard UI would go */}
-              <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 aspect-video flex items-center justify-center">
-                <div className="text-center space-y-24">
-                  <p className="text-slate-400 text-sm font-mono italic">
-                    [ Interactive Dashboard Preview ]
-                  </p>
+          <div className="relative w-full max-w-5xl px-4 mx-auto group">
+            {/* Glow Effect */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
 
-                  <div className="relative w-full max-w-xl mx-auto h-[220px] sm:h-[260px] rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow scale-150">
+            {/* Main Container */}
+            <div className="relative rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 backdrop-blur-xl p-2 shadow-2xl">
+              {/* Inner Dashboard Wrapper - aspect-video keeps it 16:9 */}
+              <div className="relative rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 aspect-video overflow-hidden flex flex-col items-center justify-center p-4">
+                {/* Label - Reduced margin for mobile */}
+                <p className="text-slate-400 text-[10px] sm:text-sm font-mono italic mb-4 sm:mb-8">
+                  [ Interactive Dashboard Preview ]
+                </p>
+
+                {/* Image Container */}
+                <div className="relative w-full max-w-2xl mx-auto">
+                  <div
+                    className="relative rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 shadow-lg 
+                        transform transition-transform duration-500
+                        scale-110 sm:scale-125 md:scale-150"
+                  >
                     <img
                       src={images[currentImage]}
                       alt="dashboard preview"
-                      className="w-full h-full object-cover transition-opacity duration-700"
+                      className="w-full h-auto object-cover transition-opacity duration-700 aspect-[16/10]"
                     />
                   </div>
                 </div>

@@ -1,10 +1,21 @@
 import PublicNavbar from "../components/PublicNavbar";
 import Footer from "../components/Footer";
+import { useState } from "react";
+import Navbar from "../components/Navbar";
 
 function About() {
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 selection:bg-purple-100">
-      <PublicNavbar />
+      {user ? (
+        <Navbar user={user} />
+      ) : (
+        <PublicNavbar />
+      )}
 
       <main className="relative overflow-hidden pt-32 pb-24">
         {/* Background Decorative Blobs */}

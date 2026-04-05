@@ -2,14 +2,20 @@ import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 function PublicNavbar() {
-  const [darkMode, setDarkMode] = useState(true);
   const location = useLocation();
+
+  // 1. Initialize from localStorage (default to dark if nothing is saved)
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("theme") !== "light";
+  });
 
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
     } else {
       document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
     }
   }, [darkMode]);
 
@@ -21,11 +27,14 @@ function PublicNavbar() {
       {/* Subtle border and blur container */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-4">
         <div className="flex items-center justify-between h-16 px-6 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl shadow-sm dark:shadow-2xl">
-          
           {/* Logo Section */}
           <Link to="/" className="flex items-center gap-3 group">
             <div className="p-1.5 rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 transition-transform group-hover:scale-110">
-              <img src="/favicon.png" className="w-6 h-6 brightness-110" alt="Nexus" />
+              <img
+                src="/favicon.png"
+                className="w-6 h-6 brightness-110"
+                alt="Nexus"
+              />
             </div>
             <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white uppercase">
               Nexus
@@ -43,8 +52,8 @@ function PublicNavbar() {
                 key={link.name}
                 to={link.path}
                 className={`text-sm font-medium transition-colors hover:text-purple-500 dark:hover:text-purple-400 ${
-                  isActive(link.path) 
-                    ? "text-purple-600 dark:text-purple-400" 
+                  isActive(link.path)
+                    ? "text-purple-600 dark:text-purple-400"
                     : "text-slate-600 dark:text-slate-400"
                 }`}
               >
@@ -80,7 +89,6 @@ function PublicNavbar() {
               Get Started
             </Link>
           </div>
-
         </div>
       </div>
     </nav>
