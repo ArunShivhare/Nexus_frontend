@@ -14,7 +14,9 @@ function TaskChat({ taskId, user }) {
     socket.emit("joinTask", taskId);
 
     socket.on("receiveMessage", (msg) => {
-      setMessages((prev) => [...prev, msg]);
+      if (msg.taskId === taskId) {
+        setMessages((prev) => [...prev, msg]);
+      }
     });
 
     return () => {
@@ -27,6 +29,7 @@ function TaskChat({ taskId, user }) {
     if (!message.trim()) return;
 
     const msgData = {
+      taskId, // 🔥 IMPORTANT
       sender: user.name,
       text: message,
       time: new Date().toLocaleTimeString(),
@@ -43,7 +46,6 @@ function TaskChat({ taskId, user }) {
 
   return (
     <div className="mt-4 p-4 rounded-xl bg-gray-100 dark:bg-gray-800">
-      
       <h3 className="text-sm font-semibold mb-2">💬 Task Chat</h3>
 
       {/* Messages */}
@@ -72,7 +74,6 @@ function TaskChat({ taskId, user }) {
           Send
         </button>
       </div>
-
     </div>
   );
 }
