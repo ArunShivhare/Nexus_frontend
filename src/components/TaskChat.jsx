@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import axios from "axios";
 
-const socket = io("https://nexus-backend-dioy.onrender.com"); // 🔥 your backend URL
+// const socket = io("https://nexus-backend-dioy.onrender.com"); // 🔥 your backend URL
 
 function TaskChat({ taskId, user }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [socket, setSocket] = useState(null);
 
   // join room
   useEffect(() => {
@@ -14,10 +15,14 @@ function TaskChat({ taskId, user }) {
 
     // 🔥 Load old messages
     const fetchMessages = async () => {
-      const res = await axios.get(
-        `https://your-backend-url/api/messages/${taskId}`,
-      );
-      setMessages(res.data);
+      try {
+        const res = await axios.get(
+          `https://nexus-backend-dioy.onrender.com/api/messages/${taskId}`,
+        );
+        setMessages(res.data);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
     };
 
     fetchMessages();
@@ -53,6 +58,13 @@ function TaskChat({ taskId, user }) {
 
     setMessage("");
   };
+
+  useEffect(() => {
+    const newSocket = io("https://nexus-backend-dioy.onrender.com");
+    setSocket(newSocket);
+
+    return () => newSocket.disconnect();
+  }, []);
 
   return (
     <div className="mt-4 p-4 rounded-xl bg-gray-100 dark:bg-gray-800">
