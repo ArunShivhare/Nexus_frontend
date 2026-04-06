@@ -2,22 +2,27 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import axios from "axios";
 
-// const socket = io("https://nexus-backend-dioy.onrender.com"); // 🔥 your backend URL
-
 function TaskChat({ taskId, user }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
 
-  // join room
+  // 🔥 Create socket connection
   useEffect(() => {
-    if (!taskId) return;
+    const newSocket = io("https://nexus-backend-dioy.onrender.com");
+    setSocket(newSocket);
 
-    // 🔥 Load old messages
+    return () => newSocket.disconnect();
+  }, []);
+
+  // 🔥 Load messages + join room
+  useEffect(() => {
+    if (!taskId || !socket) return;
+
     const fetchMessages = async () => {
       try {
         const res = await axios.get(
-          `https://nexus-backend-dioy.onrender.com/api/messages/${taskId}`,
+          `https://nexus-backend-dioy.onrender.com/api/messages/${taskId}`
         );
         setMessages(res.data);
       } catch (error) {
@@ -38,11 +43,11 @@ function TaskChat({ taskId, user }) {
     return () => {
       socket.off("receiveMessage");
     };
-  }, [taskId]);
+  }, [taskId, socket]);
 
-  // send message
+  // 🔥 Send message
   const sendMessage = () => {
-    if (!message.trim()) return;
+    if (!message.trim() || !socket) return;
 
     const msgData = {
       taskId,
@@ -58,13 +63,6 @@ function TaskChat({ taskId, user }) {
 
     setMessage("");
   };
-
-  useEffect(() => {
-    const newSocket = io("https://nexus-backend-dioy.onrender.com");
-    setSocket(newSocket);
-
-    return () => newSocket.disconnect();
-  }, []);
 
   return (
     <div className="mt-4 p-4 rounded-xl bg-gray-100 dark:bg-gray-800">
