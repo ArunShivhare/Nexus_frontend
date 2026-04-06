@@ -29,7 +29,7 @@ function TaskChat({ taskId, user }) {
     if (!message.trim()) return;
 
     const msgData = {
-      taskId, // 🔥 IMPORTANT
+      taskId,
       sender: user.name,
       text: message,
       time: new Date().toLocaleTimeString(),
@@ -40,7 +40,6 @@ function TaskChat({ taskId, user }) {
       message: msgData,
     });
 
-    setMessages((prev) => [...prev, msgData]);
     setMessage("");
   };
 
