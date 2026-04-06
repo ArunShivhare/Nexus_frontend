@@ -16,6 +16,8 @@ const LeaderDashboard = () => {
   const [selectedMember, setSelectedMember] = useState("");
   const [showAllTasks, setShowAllTasks] = useState(false);
 
+  const [activeChatTask, setActiveChatTask] = useState(null);
+
   // ---------------- MEMBER ----------------
   const fetchMembers = async () => {
     const res = await axios.get(
@@ -184,6 +186,9 @@ const LeaderDashboard = () => {
                         <th className="px-4 sm:px-6 md:px-8 py-3 sm:py-4">
                           Status
                         </th>
+                        <th className="px-4 sm:px-6 md:px-8 py-3 sm:py-4">
+                          Chat
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -218,8 +223,17 @@ const LeaderDashboard = () => {
                               }`}
                             >
                               {task.status}
-                              <TaskChat taskId={task._id} user={user} />
+                              {/* <TaskChat taskId={task._id} user={user} /> */}
                             </span>
+                          </td>
+                          <td className="px-4 sm:px-6 md:px-8 py-4 sm:py-5">
+                            {/* Click this icon to open the chat window */}
+                            <button
+                              onClick={() => setActiveChatTask(task)}
+                              className="p-2 hover:bg-purple-100 dark:hover:bg-purple-900/40 rounded-full transition-colors"
+                            >
+                              💬
+                            </button>
                           </td>
                         </tr>
                       ))}
@@ -313,6 +327,32 @@ const LeaderDashboard = () => {
         </div>
       </div>
       <Footer />
+      {/* FLOATING CHAT OVERLAY */}
+      {activeChatTask && (
+        <div className="fixed bottom-6 right-6 z-50 w-80 animate-in slide-in-from-right-10 duration-300">
+          <div className="bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
+            <div className="p-4 bg-slate-50 dark:bg-slate-950 flex justify-between items-center border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white truncate w-40">
+                  {activeChatTask.title}
+                </h3>
+                <p className="text-[10px] text-slate-400">
+                  Chat with {activeChatTask.assignedTo?.name}
+                </p>
+              </div>
+              <button
+                onClick={() => setActiveChatTask(null)}
+                className="text-slate-400 hover:text-red-500 text-lg"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="h-[400px]">
+              <TaskChat taskId={activeChatTask._id} user={user} />
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

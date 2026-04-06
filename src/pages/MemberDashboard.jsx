@@ -6,6 +6,7 @@ import TaskChat from "../components/TaskChat";
 
 function MemberDashboard({ user }) {
   const [tasks, setTasks] = useState([]);
+  const [activeChatTask, setActiveChatTask] = useState(null);
 
   const fetchTasks = async () => {
     const res = await axios.get(
@@ -127,6 +128,16 @@ function MemberDashboard({ user }) {
                           <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
                             {task.title}
                           </h3>
+                          {/* NEW: Chat Toggle Button */}
+                          <button
+                            onClick={() => setActiveChatTask(task)}
+                            className="p-2 rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 hover:scale-110 transition-transform relative group"
+                            title="Open Task Chat"
+                          >
+                            <span className="text-lg">💬</span>
+                            {/* Subtle notification dot if you want */}
+                            <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+                          </button>
                           <span
                             className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${
                               task.status === "completed"
@@ -137,7 +148,7 @@ function MemberDashboard({ user }) {
                             }`}
                           >
                             {task.status}
-                            <TaskChat taskId={task._id} user={user} />
+                            {/* <TaskChat taskId={task._id} user={user} /> */}
                           </span>
                         </div>
 
@@ -190,6 +201,36 @@ function MemberDashboard({ user }) {
         </div>
       </div>
       <Footer />
+      {/* CHAT OVERLAY */}
+      {activeChatTask && (
+        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:justify-end p-4 bg-slate-900/40 backdrop-blur-sm">
+          <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-t-[2rem] sm:rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden animate-in slide-in-from-bottom duration-300">
+            {/* Header */}
+            <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-950/50">
+              <div>
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                  Chat: {activeChatTask.title}
+                </h4>
+                <p className="text-[10px] text-slate-500 uppercase font-bold tracking-widest">
+                  Leader: {activeChatTask.assignedBy?.name}
+                </p>
+              </div>
+              <button
+                onClick={() => setActiveChatTask(null)}
+                className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* The Actual Chat Component */}
+            <div className="h-[450px] overflow-hidden">
+              <TaskChat taskId={activeChatTask._id} user={user} />
+            </div>
+          </div>
+        </div>
+      )}
+
       {selectedTask && (
         <div
           onClick={() => setSelectedTask(null)} // click outside
