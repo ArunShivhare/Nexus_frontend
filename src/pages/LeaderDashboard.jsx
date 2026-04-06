@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import TaskChat from "../components/TaskChat";
 
 const LeaderDashboard = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -217,6 +218,7 @@ const LeaderDashboard = () => {
                               }`}
                             >
                               {task.status}
+                              <TaskChat taskId={task._id} user={user} />
                             </span>
                           </td>
                         </tr>

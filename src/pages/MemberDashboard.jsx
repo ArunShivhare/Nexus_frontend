@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import TaskChat from "../components/TaskChat";
 
 function MemberDashboard({ user }) {
   const [tasks, setTasks] = useState([]);
@@ -115,7 +116,7 @@ function MemberDashboard({ user }) {
               </div>
             ) : (
               <div className="grid gap-4 sm:gap-6">
-                {tasks.map((task) => (
+                {[...tasks].reverse().map((task) => (
                   <div
                     key={task._id}
                     className="group relative bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:shadow-purple-500/5 transition-all"
@@ -136,6 +137,7 @@ function MemberDashboard({ user }) {
                             }`}
                           >
                             {task.status}
+                            <TaskChat taskId={task._id} user={user} />
                           </span>
                         </div>
 
