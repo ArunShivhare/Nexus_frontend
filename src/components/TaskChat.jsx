@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import axios from "axios";
 
 const socket = io("https://nexus-backend-dioy.onrender.com"); // 🔥 your backend URL
 
@@ -10,6 +11,16 @@ function TaskChat({ taskId, user }) {
   // join room
   useEffect(() => {
     if (!taskId) return;
+
+    // 🔥 Load old messages
+    const fetchMessages = async () => {
+      const res = await axios.get(
+        `https://your-backend-url/api/messages/${taskId}`,
+      );
+      setMessages(res.data);
+    };
+
+    fetchMessages();
 
     socket.emit("joinTask", taskId);
 
