@@ -3,6 +3,7 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import TaskChat from "../components/TaskChat";
+import Analytics from "../components/Analytics";
 
 const LeaderDashboard = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -195,7 +196,7 @@ const LeaderDashboard = () => {
                       {/* Logic: If showAllTasks is true, show all. If false, show only first 5 */}
                       {(showAllTasks
                         ? [...tasks].reverse()
-                        : [...tasks].reverse().slice(0, 5)
+                        : [...tasks].reverse().slice(0, 10)
                       ).map((task) => (
                         <tr
                           key={task._id}
@@ -241,8 +242,8 @@ const LeaderDashboard = () => {
                   </table>
                 </div>
 
-                {/* Only show button if there are more than 5 tasks */}
-                {tasks.length > 5 && (
+                {/* Only show button if there are more than 10 tasks */}
+                {tasks.length > 10 && (
                   <div className="p-4 border-t border-slate-100 dark:border-slate-800 flex justify-center bg-slate-50/30 dark:bg-slate-950/20">
                     <button
                       onClick={() => setShowAllTasks(!showAllTasks)}
@@ -321,6 +322,13 @@ const LeaderDashboard = () => {
                     );
                   })}
                 </div>
+              </div>
+              <div className="mt-10">
+                <h2 className="text-xl font-semibold mb-4">
+                  📊 Analytics Overview
+                </h2>
+
+                <Analytics tasks={tasks} members={members} />
               </div>
             </div>
           </div>
