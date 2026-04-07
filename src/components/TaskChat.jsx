@@ -24,7 +24,7 @@ function TaskChat({ taskId, user }) {
     const fetchMessages = async () => {
       try {
         const res = await axios.get(
-          `https://nexus-backend-dioy.onrender.com/api/messages/${taskId}`
+          `https://nexus-backend-dioy.onrender.com/api/messages/${taskId}`,
         );
         setMessages(res.data);
       } catch (error) {
@@ -34,7 +34,14 @@ function TaskChat({ taskId, user }) {
 
     fetchMessages();
 
+    socket.on("messagesSeen", ({ taskId: seenTaskId }) => {
+      if (seenTaskId === taskId) {
+        setMessages((prev) => prev.map((msg) => ({ ...msg, seen: true })));
+      }
+    });
+
     socket.emit("joinTask", taskId);
+    socket.emit("markSeen", { taskId });
 
     socket.on("receiveMessage", (msg) => {
       if (msg.taskId === taskId) {
@@ -85,7 +92,6 @@ function TaskChat({ taskId, user }) {
       taskId,
       sender: user.name,
       text: message,
-      time: new Date().toLocaleTimeString(),
       seen: false,
     };
 
@@ -115,7 +121,12 @@ function TaskChat({ taskId, user }) {
             <p>{msg.text}</p>
 
             <div className="flex justify-between items-center mt-1 text-[10px] opacity-70">
-              <span>{msg.time}</span>
+              <span>
+                {new Date(msg.time).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </span>
               <span>{msg.seen ? "✔✔" : "✔"}</span>
             </div>
           </div>
