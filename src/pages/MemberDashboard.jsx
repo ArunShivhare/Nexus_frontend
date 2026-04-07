@@ -3,6 +3,7 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import TaskChat from "../components/TaskChat";
+import MemberAnalytics from "../components/MemberAnalytics";
 
 function MemberDashboard({ user }) {
   const [tasks, setTasks] = useState([]);
@@ -97,6 +98,8 @@ function MemberDashboard({ user }) {
               </div>
             ))}
           </div>
+          
+      <MemberAnalytics tasks={tasks} />
 
           {/* TASK LIST SECTION */}
           <div className="space-y-6">
