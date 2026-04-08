@@ -1,13 +1,17 @@
 import {
+  AreaChart,
+  Area,
   PieChart,
   Pie,
   Cell,
+  CartesianGrid,
   BarChart,
   Bar,
   XAxis,
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  Legend,
   LineChart,
   Line,
 } from "recharts";
@@ -28,9 +32,7 @@ function Analytics({ tasks, members }) {
 
   // ---------------- MEMBER DATA ----------------
   const memberData = members.map((member) => {
-    const memberTasks = tasks.filter(
-      (t) => t.assignedTo?._id === member._id
-    );
+    const memberTasks = tasks.filter((t) => t.assignedTo?._id === member._id);
 
     return {
       name: member.name,
@@ -71,59 +73,177 @@ function Analytics({ tasks, members }) {
 
   // ---------------- UI ----------------
   return (
-    <div className="grid md:grid-cols-2 gap-6">
-
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* 🧠 Insights Card */}
-      <div className="bg-gradient-to-r from-purple-500 to-blue-500 text-white p-4 rounded-xl shadow col-span-2">
+      <div className="bg-gradient-to-r from-purple-500 to-blue-500 text-white p-4 rounded-xl shadow md:col-span-2">
         <h3 className="font-semibold mb-1">🧠 Insights</h3>
         <p className="text-sm">{insight}</p>
         <p className="text-xs mt-1">Completion Rate: {completionRate}%</p>
       </div>
 
       {/* Pie Chart */}
-      <div className="bg-white dark:bg-slate-900 p-4 rounded-xl shadow">
-        <h3 className="mb-3 font-semibold">Task Distribution</h3>
+      <div className="bg-white dark:bg-slate-900 p-6 rounded-xl shadow md:col-span-2">
+        <h3 className="mb-4 font-bold text-lg text-slate-800 dark:text-white">
+          Task Distribution
+        </h3>
 
-        <ResponsiveContainer width="100%" height={250}>
+        <ResponsiveContainer width="100%" height={300}>
           <PieChart>
-            <Pie data={data} dataKey="value" outerRadius={80}>
+            <Pie
+              data={data}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              innerRadius={60} // Makes it a Donut Chart
+              outerRadius={90}
+              paddingAngle={5} // Adds space between segments
+              label={({ name, percent }) =>
+                `${name} ${(percent * 100).toFixed(0)}%`
+              } // Shows % on chart
+            >
               {data.map((entry, index) => (
-                <Cell key={index} fill={COLORS[index]} />
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                  stroke="none"
+                />
               ))}
             </Pie>
-            <Tooltip />
+
+            <Tooltip
+              contentStyle={{
+                borderRadius: "8px",
+                border: "none",
+                boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+              }}
+            />
+
+            {/* Legend makes the colors understandable at a glance */}
+            <Legend verticalAlign="bottom" height={36} iconType="circle" />
           </PieChart>
         </ResponsiveContainer>
       </div>
 
       {/* Bar Chart */}
-      <div className="bg-white dark:bg-slate-900 p-4 rounded-xl shadow">
-        <h3 className="mb-3 font-semibold">Member Performance</h3>
+      <div className="bg-white dark:bg-slate-900 p-6 rounded-xl shadow md:col-span-2">
+        <h3 className="mb-4 font-bold text-lg text-slate-800 dark:text-white">
+          Member Performance
+        </h3>
 
-        <ResponsiveContainer width="100%" height={250}>
-          <BarChart data={memberData}>
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="tasks" fill="#6366f1" />
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart
+            data={memberData}
+            margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
+          >
+            {/* Grid lines make it easier to track values */}
+            <CartesianGrid
+              strokeDasharray="3 3"
+              vertical={false}
+              stroke="#e2e8f0"
+              opacity={0.5}
+            />
+
+            <XAxis
+              dataKey="name"
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: "#64748b", fontSize: 12 }}
+              interval={0} // Shows all names even if many members
+            />
+
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: "#64748b", fontSize: 12 }}
+            />
+
+            <Tooltip
+              cursor={{ fill: "#f1f5f9" }} // Subtle hover background
+              contentStyle={{
+                borderRadius: "8px",
+                border: "none",
+                boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+              }}
+            />
+
+            <Bar
+              dataKey="tasks"
+              fill="#6366f1"
+              radius={[6, 6, 0, 0]} // Rounded top corners
+              barSize={40} // Consistent bar width
+              label={{
+                position: "top",
+                fill: "#64748b",
+                fontSize: 12,
+                offset: 8,
+              }} // Shows number on top
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>
 
       {/* Trend Chart */}
-      <div className="bg-white dark:bg-slate-900 p-4 rounded-xl shadow col-span-2">
-        <h3 className="mb-3 font-semibold">📈 Task Activity Trend</h3>
+      <div className="bg-white dark:bg-slate-900 p-6 rounded-xl shadow md:col-span-2">
+        <h3 className="mb-4 font-bold text-lg text-slate-800 dark:text-white">
+          📈 Task Activity Trend
+        </h3>
 
-        <ResponsiveContainer width="100%" height={250}>
-          <LineChart data={trendArray}>
-            <XAxis dataKey="date" />
-            <YAxis />
-            <Tooltip />
-            <Line type="monotone" dataKey="tasks" stroke="#8b5cf6" />
-          </LineChart>
+        <ResponsiveContainer width="100%" height={300}>
+          <AreaChart
+            data={trendArray}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          >
+            {/* Defines the smooth purple gradient */}
+            <defs>
+              <linearGradient id="colorTasks" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+
+            <CartesianGrid
+              strokeDasharray="3 3"
+              vertical={false}
+              stroke="#e2e8f0"
+              opacity={0.5}
+            />
+
+            <XAxis
+              dataKey="date"
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: "#64748b", fontSize: 12 }}
+              dy={10}
+            />
+
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: "#64748b", fontSize: 12 }}
+            />
+
+            <Tooltip
+              contentStyle={{
+                borderRadius: "12px",
+                border: "none",
+                boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+              }}
+            />
+
+            {/* The Area provides the gradient fill, the Line provides the stroke */}
+            <Area
+              type="monotone"
+              dataKey="tasks"
+              stroke="#8b5cf6"
+              strokeWidth={3}
+              fillOpacity={1}
+              fill="url(#colorTasks)"
+              activeDot={{ r: 6, strokeWidth: 0 }}
+            />
+          </AreaChart>
         </ResponsiveContainer>
       </div>
-
     </div>
   );
 }
