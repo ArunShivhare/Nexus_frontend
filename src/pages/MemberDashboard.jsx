@@ -7,6 +7,7 @@ import MemberAnalytics from "../components/MemberAnalytics";
 
 function MemberDashboard({ user }) {
   const [tasks, setTasks] = useState([]);
+  const [showAllTasks, setShowAllTasks] = useState(false);
   const [activeChatTask, setActiveChatTask] = useState(null);
 
   const fetchTasks = async () => {
@@ -99,9 +100,22 @@ function MemberDashboard({ user }) {
             ))}
           </div>
           
-      <MemberAnalytics tasks={tasks} />
+          <div className="grid lg:grid-cols-12 gap-8 items-start">
+  
+  {/* LEFT SIDE: Sidebar Analytics (Takes 4 units of space) */}
+  <aside className="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
+    <div className="flex flex-col gap-2 px-2">
+       <h2 className="text-xl font-bold text-slate-900 dark:text-white">Performance</h2>
+       <p className="text-xs text-slate-500 uppercase tracking-widest font-bold">Real-time Metrics</p>
+    </div>
+    
+    {/* This is your sidebar-styled analytics component */}
+    <MemberAnalytics tasks={tasks} />
+  </aside>
 
           {/* TASK LIST SECTION */}
+          
+  <main className="lg:col-span-8 space-y-6">
           <div className="space-y-6">
             <div className="flex items-center justify-between px-2">
               <h2 className="text-xl font-bold text-slate-900 dark:text-white">
@@ -120,7 +134,10 @@ function MemberDashboard({ user }) {
               </div>
             ) : (
               <div className="grid gap-4 sm:gap-6">
-                {[...tasks].reverse().map((task) => (
+                {(showAllTasks
+                  ? [...tasks].reverse()
+                  : [...tasks].reverse().slice(0, 3)
+                ).map((task) => (
                   <div
                     key={task._id}
                     className="group relative bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:shadow-purple-500/5 transition-all"
@@ -200,6 +217,20 @@ function MemberDashboard({ user }) {
                 ))}
               </div>
             )}
+            {tasks.length > 3 && (
+              <div className="p-4 border-t border-slate-100 dark:border-slate-800 flex justify-center bg-slate-50/30 dark:bg-slate-950/20">
+                <button
+                  onClick={() => setShowAllTasks(!showAllTasks)}
+                  className="text-sm font-bold text-purple-600 dark:text-purple-400 hover:underline transition-all"
+                >
+                  {showAllTasks
+                    ? "Show Less"
+                    : `View All Operations (${tasks.length})`}
+                </button>
+              </div>
+            )}
+          </div>
+          </main>
           </div>
         </div>
       </div>
@@ -233,7 +264,6 @@ function MemberDashboard({ user }) {
           </div>
         </div>
       )}
-
       {selectedTask && (
         <div
           onClick={() => setSelectedTask(null)} // click outside
